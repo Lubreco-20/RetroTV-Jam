@@ -3,11 +3,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("General")]
-    public Rigidbody rb;
+    public CharacterController characterController;
     PlayerInputs inputActions;
 
     [Header("Movement")]
     public float playerSpeed = 5f;
+    float gravity = -20f;
+    Vector3 vel;
     Vector2 dir;
 
     [Header("Camera")]
@@ -19,7 +21,7 @@ public class PlayerController : MonoBehaviour
 
     Vector2 mousePos;
 
-    void Start()
+    void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -31,8 +33,6 @@ public class PlayerController : MonoBehaviour
 
         inputActions.PlayerMap.Look.performed += ctx => mousePos = ctx.ReadValue<Vector2>();
         inputActions.PlayerMap.Look.canceled += ctx => mousePos = Vector2.zero;
-
-        inputActions.Enable();
     }
 
     private void Update()
@@ -48,16 +48,30 @@ public class PlayerController : MonoBehaviour
 
         // Rotacion de la camara
         cam.localRotation = Quaternion.Euler(xRot, 0f, 0f);
-    }
 
-    void FixedUpdate()
-    {
         moveCharacter();
     }
 
     void moveCharacter()
     {
         Vector3 moveDir = transform.right * dir.x + transform.forward * dir.y;
-        rb.linearVelocity = moveDir * playerSpeed;
+
+        if (characterController.isGrounded && vel.y < 0)
+            vel.y = -2;
+        else
+            vel.y += gravity * Time.deltaTime;
+
+        Vector3 finalMove = moveDir * playerSpeed + vel;
+        characterController.Move(finalMove * Time.deltaTime);
+    }
+
+    void OnEnable()
+    {
+        inputActions.Enable();
+    }
+
+    void OnDisable()
+    {
+        inputActions.Disable();
     }
 }
