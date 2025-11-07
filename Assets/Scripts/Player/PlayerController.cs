@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -33,6 +35,8 @@ public class PlayerController : MonoBehaviour
 
         inputActions.PlayerMap.Look.performed += ctx => mousePos = ctx.ReadValue<Vector2>();
         inputActions.PlayerMap.Look.canceled += ctx => mousePos = Vector2.zero;
+
+        inputActions.PlayerMap.Attack.performed += Attack;
     }
 
     private void Update()
@@ -63,6 +67,11 @@ public class PlayerController : MonoBehaviour
 
         Vector3 finalMove = moveDir * playerSpeed + vel;
         characterController.Move(finalMove * Time.deltaTime);
+    }
+
+    private void Attack(InputAction.CallbackContext context)
+    {
+        //Llamar al ataque del arma
     }
 
     void OnEnable()

@@ -9,6 +9,8 @@ public class EnemyController : MonoBehaviour
     private GameObject player;
     public NavMeshAgent agent;
 
+    public bool canMove = true;
+
     private void OnEnable()
     {
         player = GameObject.FindGameObjectWithTag("Player");
@@ -28,7 +30,7 @@ public class EnemyController : MonoBehaviour
 
     private void FollowPlayer()
     {
-        if (player == null)
+        if (player == null || !canMove)
         {
             agent.isStopped = true;
             return;
