@@ -2,9 +2,18 @@ using UnityEngine;
 
 public class SpriteBillboard : MonoBehaviour
 {
+    Camera cam;
+
+    private void Awake()
+    {
+        cam = GetComponent<Camera>();
+    }
+
     void LateUpdate()
     {
-        transform.LookAt(Camera.main.transform.position, Vector3.up);
-        //transform.forward = Camera.main.transform.forward;
+        if (cam == null) return;
+
+        transform.LookAt(cam.transform.position, Vector3.up);
+        //transform.forward = cam.transform.forward;
     }
 }
