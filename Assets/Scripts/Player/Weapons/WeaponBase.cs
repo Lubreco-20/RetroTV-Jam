@@ -1,87 +1,159 @@
-using System.Collections;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponBase : MonoBehaviour
 {
-    public LayerMask hitMask;
+    [Header("General")]
+    public WeaponData data;
+    public Transform attackPoint;
+    public RaycastHit rayHit;
+    public LayerMask enemyMask;
 
-    protected WeaponData data;
+    private Camera fpsCam;
 
-    protected float timeBtwShots;
-    protected float lastFireTime;
+    // Rates
+    private float timeBtwShots;
+    private float fireRate;
 
-    protected bool isAttacking;
-    protected bool isReloading;
+    // Checkers
+    private bool isAttacking;
+    private bool isReadyToAttack;
+    private bool isReloading;
 
-    protected int currentAmmo;
-    protected int currentMagazineSize;
-    protected int currentReserve;
+    // Bullets
+    [HideInInspector] public int currentAmmo;
+    private int bulletsShot;
+    [HideInInspector] public int currentMagazineSize;
+    [HideInInspector] public int currentReserve;
 
-    public virtual void Initialize(WeaponData data)
+    public Action<int, int, int> OnBulletsChange;
+
+    public void Initialize(Camera cam)
     {
-        this.data = data;
-        timeBtwShots = data.fireRate;
+        fpsCam = cam;
+        timeBtwShots = data.timeBtwShooting;
+        fireRate = data.fireRate;
         currentAmmo = data.magazineSize;
         currentMagazineSize = data.magazineSize;
         currentReserve = data.reserveAmmo;
     }
 
-    public virtual void StartAttacking()
+    public void SetWeapon()
     {
-        if (isReloading) return;
-        isAttacking = true;
+        currentAmmo = data.magazineSize;
+        currentMagazineSize = data.magazineSize;
+        currentReserve = data.reserveAmmo;
+
+        OnBulletsChange?.Invoke(currentAmmo, currentMagazineSize, currentReserve);
+
+        isReadyToAttack = true;
+        isReloading = false;
     }
 
-    public virtual void StopAttacking()
+    public void StartAttacking()
+    {
+        if (isReloading ||
+            data.useBullets && currentAmmo <= 0 ||
+            isAttacking ||
+            !isReadyToAttack)
+            return;
+
+        isAttacking = true;
+        bulletsShot = data.bulletsPerShot;
+        Attack();
+    }
+
+    public void StopAttacking()
     {
         isAttacking = false;
     }
 
-    public virtual void StartReloading()
+    private void Attack()
     {
-        if (isReloading) return;
-        if(currentAmmo >= data.magazineSize) return;
-        if (currentReserve <= 0) return;
+        isReadyToAttack = false;
+
+        if (data.useBullets)
+        {
+            for (int i = 0; i < data.bulletsPerShot; i++)
+            {
+                // Spread
+                float x = UnityEngine.Random.Range(-data.spread, data.spread);
+                float y = UnityEngine.Random.Range(-data.spread, data.spread);
+
+                // Calculate direction spread
+                Vector3 dirSpread = fpsCam.transform.forward + new Vector3(x, y, 0);
+
+                // Guardar para visualizar
+                debugRays.Add((fpsCam.transform.position, dirSpread.normalized));
+
+                if (Physics.Raycast(fpsCam.transform.position, dirSpread, out rayHit, data.range, enemyMask))
+                {
+                    if (rayHit.collider.CompareTag("Enemy"))
+                    {
+                        rayHit.collider.GetComponent<EnemyHealth>().GetDamage(data.dmg);
+                    }
+                }
+            }
+
+            currentAmmo--;
+            //bulletsShot--;
+
+            OnBulletsChange?.Invoke(currentAmmo, currentMagazineSize, currentReserve);
+        }
+
+        Invoke("ResetAttack", fireRate);
+
+        if(currentAmmo > 0 && isAttacking && data.allowBtnHold)
+            Invoke("Attack", timeBtwShots);
+    }
+
+    private void ResetAttack() => isReadyToAttack = true;
+
+    public void StartReloading()
+    {
+        if (isReloading ||
+            data.useBullets && currentAmmo >= data.magazineSize ||
+            currentReserve <= 0) return;
 
         StopAttacking();
         isReloading = true;
 
-        StartCoroutine(ReloadTime());
+        //Sustituir Invoke por final de animación
+        Invoke("Reload", data.reloadTime);
     }
 
-    //TEMP
-    IEnumerator ReloadTime()
+    // Lo llamaré desde la animación
+    public void Reload()
     {
-        yield return new WaitForSeconds(data.reloadTime);
-
-        int bulletsNeeded = currentMagazineSize - currentAmmo;
+        /*int bulletsNeeded = currentMagazineSize - currentAmmo;
         int bulletsTaken = Mathf.Min(bulletsNeeded, currentReserve);
 
         currentAmmo += bulletsTaken;
-        currentReserve -= bulletsTaken;
+        currentReserve -= bulletsTaken;*/
+        
+        currentAmmo = currentMagazineSize; // TEMP
+
+        OnBulletsChange?.Invoke(currentAmmo, currentMagazineSize, currentReserve);
 
         isReloading = false;
     }
 
-    /// <summary>
-    /// Lo llamaré según el tipo de arma para su animación
-    /// </summary>
-    public virtual void Reload() { }
+    private List<(Vector3 origin, Vector3 dir)> debugRays = new();
+    [Header("Debug")]
+    [SerializeField] private bool showGizmos;
 
-    public virtual bool CanConsumeAmmo()
+    private void OnDrawGizmos()
     {
-        if (currentAmmo == 0) return false;
+        if (!showGizmos || debugRays == null || debugRays.Count == 0)
+            return;
 
-        currentAmmo--;
-        return true;
-    }
+        Gizmos.color = Color.red;
 
-    public virtual bool CanAttack()
-    {
-        if(isReloading) return false;
-        if (Time.time - lastFireTime < timeBtwShots) return false;
-        if (currentAmmo <= 0) return false;
-
-        return true;
+        foreach (var ray in debugRays)
+        {
+            Gizmos.DrawRay(ray.origin, ray.dir * data.range);
+        }
     }
 }

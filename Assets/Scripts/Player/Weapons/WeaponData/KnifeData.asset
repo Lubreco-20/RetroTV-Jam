@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15bf867d7d4262e4cab825578b4e096c, type: 3}
   m_Name: KnifeData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
-  nameWeapon: Knife
+  weaponName: Knife
   dmg: 1
   fireRate: 0
   magazineSize: 0
@@ -20,3 +20,6 @@ MonoBehaviour:
   reloadTime: 0
   spread: 0
   recoil: 0
+  range: 0
+  allowBtnHold: 0
+  useBullets: 0

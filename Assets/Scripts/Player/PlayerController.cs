@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
 
     Vector2 mousePos;
 
+    [Header("WeaponController")]
+    public WeaponHandler weaponHandler;
+
     void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -36,7 +39,10 @@ public class PlayerController : MonoBehaviour
         inputActions.PlayerMap.Look.performed += ctx => mousePos = ctx.ReadValue<Vector2>();
         inputActions.PlayerMap.Look.canceled += ctx => mousePos = Vector2.zero;
 
-        inputActions.PlayerMap.Attack.performed += Attack;
+        inputActions.PlayerMap.Attack.started += weaponHandler.OnAttackStart;
+        inputActions.PlayerMap.Attack.canceled += weaponHandler.OnAttackStop;
+
+        inputActions.PlayerMap.Reload.started += weaponHandler.OnReload;
     }
 
     private void Update()
@@ -67,11 +73,6 @@ public class PlayerController : MonoBehaviour
 
         Vector3 finalMove = moveDir * playerSpeed + vel;
         characterController.Move(finalMove * Time.deltaTime);
-    }
-
-    private void Attack(InputAction.CallbackContext context)
-    {
-        //Llamar al ataque del arma
     }
 
     void OnEnable()
