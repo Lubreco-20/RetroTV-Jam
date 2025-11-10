@@ -21,6 +21,6 @@ MonoBehaviour:
   bulletsPerShot: 8
   reloadTime: 1.5
   spread: 0.08
-  range: 30
+  range: 80
   allowBtnHold: 0
   useBullets: 1

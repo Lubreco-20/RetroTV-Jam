@@ -17,9 +17,13 @@ public class EnemyWaves : MonoBehaviour
 
     [SerializeField] private float maxEnemiesAllowed = 100f;
     private int enemyToSpawn = 0; // Cantidad máxima de enemigos que va a spawnear
+    private int enemySpawned = 0; // Enemigos spawneados
     private int enemieKilled = -1; // Cantidad de enemigos que tiene que matar para pasar a la siguiente ronda
 
     private bool bossAlreadySpawned = false;
+
+    [Header("Others")]
+    public SpawnItem items;
 
     private void Start()
     {
@@ -87,17 +91,15 @@ public class EnemyWaves : MonoBehaviour
 
     private void StartWave()
     {
-        if (currentWave < waveList.waves.Count - 1)
-        {
-            enemyToSpawn = waveList.waves[currentWave].waveQuota;
-            enemieKilled = enemyToSpawn;
-            bossAlreadySpawned = false;
-        }
+        enemyToSpawn = waveList.waves[currentWave].waveQuota;
+        enemieKilled = enemyToSpawn;
+        enemySpawned = 0;
+        bossAlreadySpawned = false;
     }
 
     private void EnemySpawner()
     {
-        if (enemyToSpawn >= maxEnemiesAllowed)
+        if (enemySpawned >= maxEnemiesAllowed || enemySpawned >= enemyToSpawn)
             return;
 
         var wave = waveList.waves[currentWave];
@@ -146,7 +148,7 @@ public class EnemyWaves : MonoBehaviour
 
             enemyHealth.OnEnemyDeath += OnEnemyKilled;
 
-            enemyToSpawn++;
+            enemySpawned++;
         }
     }
 
@@ -159,7 +161,7 @@ public class EnemyWaves : MonoBehaviour
     private void OnEnemyKilled(EnemyHealth enemy)
     {
         enemieKilled--;
-
+        items.GetRandomItem(enemy.transform.position);
         enemy.OnEnemyDeath -= OnEnemyKilled;
     }
 }

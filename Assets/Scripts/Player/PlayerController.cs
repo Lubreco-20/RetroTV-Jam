@@ -26,6 +26,10 @@ public class PlayerController : MonoBehaviour
     [Header("WeaponController")]
     public WeaponHandler weaponHandler;
 
+    [Header("Classes")]
+    public PlayerHealth health;
+    public WeaponHandler weapons;
+
     void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -43,6 +47,9 @@ public class PlayerController : MonoBehaviour
         inputActions.PlayerMap.Attack.canceled += weaponHandler.OnAttackStop;
 
         inputActions.PlayerMap.Reload.started += weaponHandler.OnReload;
+
+        inputActions.PlayerMap.Scroll.performed += weaponHandler.HandleScrollWeapon;
+        inputActions.PlayerMap.Scroll.canceled += weaponHandler.HandleScrollWeapon;
     }
 
     private void Update()
@@ -83,5 +90,16 @@ public class PlayerController : MonoBehaviour
     void OnDisable()
     {
         inputActions.Disable();
+    }
+
+    private void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("Item"))
+        {
+            PickUpItem item = col.GetComponent<PickUpItem>();
+
+            if (item != null)
+                item.PickUp(this);
+        }
     }
 }

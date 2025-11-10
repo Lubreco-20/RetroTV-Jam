@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SplitterData
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyId: 1
-  enemyPrefab: {fileID: 0}
+  enemyPrefab: {fileID: 7398674743760972958, guid: d66fc9fc23638724299bd03d2de9faab, type: 3}
   maxHealth: 15
   minSpeed: 3.5
   maxSpeed: 4.5

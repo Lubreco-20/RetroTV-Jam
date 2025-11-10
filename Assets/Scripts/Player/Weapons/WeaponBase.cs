@@ -24,7 +24,6 @@ public class WeaponBase : MonoBehaviour
 
     // Bullets
     [HideInInspector] public int currentAmmo;
-    private int bulletsShot;
     [HideInInspector] public int currentMagazineSize;
     [HideInInspector] public int currentReserve;
 
@@ -42,10 +41,6 @@ public class WeaponBase : MonoBehaviour
 
     public void SetWeapon()
     {
-        currentAmmo = data.magazineSize;
-        currentMagazineSize = data.magazineSize;
-        currentReserve = data.reserveAmmo;
-
         OnBulletsChange?.Invoke(currentAmmo, currentMagazineSize, currentReserve);
 
         isReadyToAttack = true;
@@ -61,7 +56,6 @@ public class WeaponBase : MonoBehaviour
             return;
 
         isAttacking = true;
-        bulletsShot = data.bulletsPerShot;
         Attack();
     }
 
@@ -76,37 +70,61 @@ public class WeaponBase : MonoBehaviour
 
         if (data.useBullets)
         {
-            for (int i = 0; i < data.bulletsPerShot; i++)
-            {
-                // Spread
-                float x = UnityEngine.Random.Range(-data.spread, data.spread);
-                float y = UnityEngine.Random.Range(-data.spread, data.spread);
-
-                // Calculate direction spread
-                Vector3 dirSpread = fpsCam.transform.forward + new Vector3(x, y, 0);
-
-                // Guardar para visualizar
-                debugRays.Add((fpsCam.transform.position, dirSpread.normalized));
-
-                if (Physics.Raycast(fpsCam.transform.position, dirSpread, out rayHit, data.range, enemyMask))
-                {
-                    if (rayHit.collider.CompareTag("Enemy"))
-                    {
-                        rayHit.collider.GetComponent<EnemyHealth>().GetDamage(data.dmg);
-                    }
-                }
-            }
-
-            currentAmmo--;
-            //bulletsShot--;
-
-            OnBulletsChange?.Invoke(currentAmmo, currentMagazineSize, currentReserve);
+            HandleRangeAttack();
+        }
+        else
+        {
+            HandleMeleeAttack();
         }
 
-        Invoke("ResetAttack", fireRate);
+            Invoke("ResetAttack", fireRate);
 
         if(currentAmmo > 0 && isAttacking && data.allowBtnHold)
             Invoke("Attack", timeBtwShots);
+    }
+
+    private void HandleRangeAttack()
+    {
+        for (int i = 0; i < data.bulletsPerShot; i++)
+        {
+            // Spread
+            float x = UnityEngine.Random.Range(-data.spread, data.spread);
+            float y = UnityEngine.Random.Range(-data.spread, data.spread);
+
+            // Calculate direction spread
+            Vector3 dirSpread = fpsCam.transform.forward + new Vector3(x, y, 0);
+
+            // Debug
+            debugRays.Add((fpsCam.transform.position, dirSpread.normalized));
+
+            if (Physics.Raycast(fpsCam.transform.position, dirSpread, out rayHit, data.range, enemyMask))
+            {
+                if (rayHit.collider.CompareTag("Enemy"))
+                {
+                    rayHit.collider.GetComponent<EnemyHealth>().GetDamage(data.dmg);
+                }
+            }
+        }
+
+        currentAmmo--;
+
+        OnBulletsChange?.Invoke(currentAmmo, currentMagazineSize, currentReserve);
+    }
+
+    private void HandleMeleeAttack()
+    {
+        Vector3 boxCenter = fpsCam.transform.position + fpsCam.transform.forward * (data.range / 2f);
+        Vector3 halfExtents = new Vector3(data.spread, data.spread, data.range / 2f);
+
+        Collider[] hits = Physics.OverlapBox(boxCenter, halfExtents, fpsCam.transform.rotation, enemyMask);
+
+        foreach (var hit in hits)
+        {
+            if (hit.CompareTag("Enemy"))
+            {
+                hit.GetComponent<EnemyHealth>()?.GetDamage(data.dmg);
+            }
+        }
     }
 
     private void ResetAttack() => isReadyToAttack = true;
@@ -127,13 +145,11 @@ public class WeaponBase : MonoBehaviour
     // Lo llamaré desde la animación
     public void Reload()
     {
-        /*int bulletsNeeded = currentMagazineSize - currentAmmo;
+        int bulletsNeeded = currentMagazineSize - currentAmmo;
         int bulletsTaken = Mathf.Min(bulletsNeeded, currentReserve);
 
         currentAmmo += bulletsTaken;
-        currentReserve -= bulletsTaken;*/
-        
-        currentAmmo = currentMagazineSize; // TEMP
+        currentReserve -= bulletsTaken;
 
         OnBulletsChange?.Invoke(currentAmmo, currentMagazineSize, currentReserve);
 
@@ -146,14 +162,25 @@ public class WeaponBase : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!showGizmos || debugRays == null || debugRays.Count == 0)
-            return;
+        if (!showGizmos) return;
 
         Gizmos.color = Color.red;
 
-        foreach (var ray in debugRays)
+        if (data.useBullets)
         {
-            Gizmos.DrawRay(ray.origin, ray.dir * data.range);
+            if (debugRays == null || debugRays.Count == 0) return;
+
+            foreach (var ray in debugRays)
+            {
+                Gizmos.DrawRay(ray.origin, ray.dir * data.range);
+            }
+        }
+        else
+        {
+            Vector3 boxCenter = fpsCam.transform.position + fpsCam.transform.forward * (data.range / 2f);
+            Vector3 halfExtents = new Vector3(data.spread, data.spread, data.range / 2f);
+            Gizmos.matrix = Matrix4x4.TRS(boxCenter, fpsCam.transform.rotation, Vector3.one);
+            Gizmos.DrawWireCube(Vector3.zero, halfExtents * 2f);
         }
     }
 }

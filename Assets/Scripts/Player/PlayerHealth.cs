@@ -13,7 +13,7 @@ public class PlayerHealth : MonoBehaviour
     public void GetDamage(int dmg)
     {
         actualHealth -= dmg;
-
+        Debug.Log("Auch");
         if (actualHealth < 0)
         {
             gameObject.SetActive(false);

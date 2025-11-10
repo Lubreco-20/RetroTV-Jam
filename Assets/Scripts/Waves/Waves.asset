@@ -15,25 +15,15 @@ MonoBehaviour:
   waves:
   - enemyList:
     - {fileID: 11400000, guid: 4d0f6a76389a03448a029d066b7c2fbf, type: 2}
-    waveQuota: 50
+    waveQuota: 1
     enemySpawnInterval: 3
   - enemyList:
-    - {fileID: 11400000, guid: 4d0f6a76389a03448a029d066b7c2fbf, type: 2}
     - {fileID: 11400000, guid: 8ba68f0f3049db3498271631be95e7e0, type: 2}
-    waveQuota: 75
-    enemySpawnInterval: 2.5
-  - enemyList:
-    - {fileID: 11400000, guid: 8ba68f0f3049db3498271631be95e7e0, type: 2}
-    waveQuota: 100
-    enemySpawnInterval: 2
-  - enemyList:
-    - {fileID: 11400000, guid: 4d0f6a76389a03448a029d066b7c2fbf, type: 2}
-    - {fileID: 11400000, guid: 8ba68f0f3049db3498271631be95e7e0, type: 2}
-    waveQuota: 150
-    enemySpawnInterval: 1
+    waveQuota: 1
+    enemySpawnInterval: 1.5
   - enemyList:
     - {fileID: 11400000, guid: 4d0f6a76389a03448a029d066b7c2fbf, type: 2}
     - {fileID: 11400000, guid: 8ba68f0f3049db3498271631be95e7e0, type: 2}
     - {fileID: 11400000, guid: 99553a93aacc76b43bc838012278e9e3, type: 2}
-    waveQuota: 200
+    waveQuota: 1
     enemySpawnInterval: 0.5
