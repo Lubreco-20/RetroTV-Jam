@@ -16,11 +16,11 @@ public class EnemyData : ScriptableObject
     public float maxSpeed; //Velocidad máxima a la que se va a mover
 
     [Header("Attack")]
-    public int dmg; //Daño del enemigo (Por contacto)
+    public int dmg; //Daño del enemigo
 
-    [Header("Ranged attack")]
-    public float range; //Rango desde el que comenzará a disparar
-    public float rangeCoolDown; //Intervalos de disparo
+    [Header("Attack")]
+    public float attackRange; //Rango desde el que comenzará a disparar o atacar
+    public float attackCoolDown; //Intervalos de ataque
 
     [Header("Spawn")]
     [Range (0f, 1f)] public float spawnProbability = 1f;

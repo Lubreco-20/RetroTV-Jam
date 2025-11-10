@@ -129,9 +129,21 @@ public class WeaponHandler : MonoBehaviour
         }
     }
 
-    public void OnAttackStart(InputAction.CallbackContext context) => currentWeapon?.StartAttacking();
+    bool canAttack = true;
+    public void SetCanAttack(bool value)
+        => canAttack = value;
+
+    public void OnAttackStart(InputAction.CallbackContext context)
+    {
+        if (!canAttack) return;
+        currentWeapon?.StartAttacking();
+    }
 
     public void OnAttackStop(InputAction.CallbackContext context) => currentWeapon?.StopAttacking();
 
-    public void OnReload(InputAction.CallbackContext context) => currentWeapon?.StartReloading();
+    public void OnReload(InputAction.CallbackContext context)
+    {
+        if (!canAttack) return;
+        currentWeapon?.StartReloading();
+    }
 }

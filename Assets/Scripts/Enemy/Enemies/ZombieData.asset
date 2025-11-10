@@ -18,7 +18,7 @@ MonoBehaviour:
   minSpeed: 4
   maxSpeed: 5
   dmg: 1
-  range: 0
-  rangeCoolDown: 0
+  attackRange: 2.5
+  attackCoolDown: 3
   spawnProbability: 0.7
   isBoss: 0

@@ -339,9 +339,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd0fd1edc575fb4193492757ce4beb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  minEnemySpeed: 4
-  maxEnemySpeed: 5
   agent: {fileID: 8961910458582632603}
+  data: {fileID: 11400000, guid: 99553a93aacc76b43bc838012278e9e3, type: 2}
+  health: {fileID: 7692336669431795554}
   canMove: 1
 --- !u!114 &7692336669431795554
 MonoBehaviour:

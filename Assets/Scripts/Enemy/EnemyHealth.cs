@@ -8,7 +8,14 @@ public class EnemyHealth : MonoBehaviour
 
     public event Action<EnemyHealth> OnEnemyDeath;
 
-    private void OnEnable()
+    private Animator anim;
+
+    public void SetVal(Animator anim)
+    {
+        this.anim = anim;
+    }
+
+    public void RestoreHealth()
     {
         actualHealth = maxHealth;
     }
@@ -16,12 +23,16 @@ public class EnemyHealth : MonoBehaviour
     public void GetDamage(int dmg)
     {
         actualHealth -= dmg;
-        Debug.Log("Ma dao");
-
+        
         if (actualHealth <= 0)
         {
+            anim.SetTrigger("Death");
             OnEnemyDeath?.Invoke(this);
             gameObject.SetActive(false);
+        }
+        else
+        {
+            anim.SetTrigger("Hurt");
         }
     }
 }

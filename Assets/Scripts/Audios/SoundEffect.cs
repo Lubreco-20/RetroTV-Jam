@@ -49,11 +49,20 @@ public class SoundEffect : MonoBehaviour
         mixer.SetFloat(nameVolume, volume);
     }
 
-    public void GetRandomSoundEffect(int minIndex, int maxIndex, bool isOneShot = true)
+    public void GetRandomSoundEffect()
     {
-        string nameClip = clips[Random.Range(minIndex, maxIndex)].name;
-        PlaySoundEffect(nameClip, isOneShot);
+        string nameClip = clips[Random.Range(0, clips.Length)].name;
+        PlaySoundEffect(nameClip, true);
     }
+
+    public void SetRandomPitch()
+    {
+        float rndPitch = Random.Range(0.75f, 1.5f);
+        source.pitch = rndPitch;
+    }
+
+    public void SetOGPitch()
+        => source.pitch = 1f;
 
     public void PlaySoundEffectFromAnimator(string nameClip) => PlaySoundEffect(nameClip);
 }

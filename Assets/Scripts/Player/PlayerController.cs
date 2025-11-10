@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("General")]
     public CharacterController characterController;
+    public Animator anim;
     PlayerInputs inputActions;
 
     [Header("Movement")]

@@ -7,7 +7,6 @@ public class WeaponBase : MonoBehaviour
 {
     [Header("General")]
     public WeaponData data;
-    public Transform attackPoint;
     public RaycastHit rayHit;
     public LayerMask enemyMask;
 
@@ -27,6 +26,9 @@ public class WeaponBase : MonoBehaviour
     [HideInInspector] public int currentMagazineSize;
     [HideInInspector] public int currentReserve;
 
+    // Animator
+    private Animator anim;
+
     public Action<int, int, int> OnBulletsChange;
 
     public void Initialize(Camera cam)
@@ -37,6 +39,8 @@ public class WeaponBase : MonoBehaviour
         currentAmmo = data.magazineSize;
         currentMagazineSize = data.magazineSize;
         currentReserve = data.reserveAmmo;
+
+        anim = GetComponent<Animator>();
     }
 
     public void SetWeapon()
@@ -68,6 +72,8 @@ public class WeaponBase : MonoBehaviour
     {
         isReadyToAttack = false;
 
+        anim.SetTrigger("Attack");
+
         if (data.useBullets)
         {
             HandleRangeAttack();
@@ -77,7 +83,7 @@ public class WeaponBase : MonoBehaviour
             HandleMeleeAttack();
         }
 
-            Invoke("ResetAttack", fireRate);
+        //Invoke("ResetAttack", fireRate);
 
         if(currentAmmo > 0 && isAttacking && data.allowBtnHold)
             Invoke("Attack", timeBtwShots);
@@ -127,7 +133,8 @@ public class WeaponBase : MonoBehaviour
         }
     }
 
-    private void ResetAttack() => isReadyToAttack = true;
+    // Called from animator
+    public void ResetAttack() => isReadyToAttack = true;
 
     public void StartReloading()
     {
@@ -138,11 +145,10 @@ public class WeaponBase : MonoBehaviour
         StopAttacking();
         isReloading = true;
 
-        //Sustituir Invoke por final de animación
-        Invoke("Reload", data.reloadTime);
+        anim.SetTrigger("Reload");
     }
 
-    // Lo llamaré desde la animación
+    // Called from animator
     public void Reload()
     {
         int bulletsNeeded = currentMagazineSize - currentAmmo;
