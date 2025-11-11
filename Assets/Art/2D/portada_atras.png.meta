@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 316dcb95af7e40f4b8bd58c89961f583
+guid: ea9c049ada5510544b1a71e0426a739e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,89 +110,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bosss_zombie_0
+      name: BackVhs
       rect:
         serializedVersion: 2
-        x: 6
-        y: 1386
-        width: 774
-        height: 1249
+        x: 747
+        y: 36
+        width: 1752
+        height: 2437
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 016dcf12d42e4c6428b194f72701fdb4
-      internalID: -715288243
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bosss_zombie_1
-      rect:
-        serializedVersion: 2
-        x: 943
-        y: 1386
-        width: 774
-        height: 1250
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 63d8dd52f94f55546880595073a6eb88
-      internalID: -619288040
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bosss_zombie_2
-      rect:
-        serializedVersion: 2
-        x: 1897
-        y: 1378
-        width: 757
-        height: 1216
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 62006c4439d52824b851c551e6d325fa
-      internalID: 1347512644
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: bosss_zombie_3
-      rect:
-        serializedVersion: 2
-        x: 66
-        y: 1
-        width: 774
-        height: 1247
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 602461a6e8e06ba42ae69625c0937ec6
-      internalID: 1110407926
+      spriteID: 87bd910d32b6f3245a4ececbb3e8de36
+      internalID: -1988079319
       vertices: []
       indices: 
       edges: []
@@ -201,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 473637786e2782f4ea95f49f171399d2
+    spriteID: 5904b8cf19667ef4cb7635347ad5c3a4
     internalID: 0
     vertices: []
     indices: 
@@ -213,10 +147,7 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      bosss_zombie_0: -715288243
-      bosss_zombie_1: -619288040
-      bosss_zombie_2: 1347512644
-      bosss_zombie_3: 1110407926
+      BackVhs: -1988079319
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

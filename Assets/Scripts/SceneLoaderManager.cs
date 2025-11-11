@@ -5,16 +5,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class SceneLoaderManager : MonoBehaviour//, ISceneLoader
+public class SceneLoaderManager : MonoBehaviour
 {
     string sceneName;
 
-    [SerializeField] GameObject loadingScreen;
-    [SerializeField] Slider slider;
-    [SerializeField] GameObject fader;
     Animator anim;
 
-    //ISound sfx;
+    [SerializeField]PlayerController controller;
 
     static SceneLoaderManager inst;
 
@@ -28,18 +25,25 @@ public class SceneLoaderManager : MonoBehaviour//, ISceneLoader
 
     private void Start()
     {
-        loadingScreen.SetActive(false);
-        //sfx = GetComponent<ISound>();
-        anim = fader.GetComponent<Animator>();
+        Time.timeScale = 1f;
+        anim = GetComponent<Animator>();
+        controller.DisableInput();
+        anim.updateMode = AnimatorUpdateMode.Normal;
         anim.Play("FadeOut");
     }
+
+    public void EnableInput()
+        => controller.EnableInput();
 
     public void GoToScene(string name)
     {
         sceneName = name;
+        controller.DisableInput();
+        anim.updateMode = AnimatorUpdateMode.UnscaledTime;
         anim.Play("FadeIn");
     }
 
+    // Call from animation
     public void LoadAndUnloadLastScene()
     {
         if (sceneName == null) return;
@@ -48,6 +52,7 @@ public class SceneLoaderManager : MonoBehaviour//, ISceneLoader
         StartCoroutine(LoadingAsync(operation, true));
     }
 
+    // Call from animation
     public void LoadAndNotUnloadLastScene()
     {
         if (sceneName == null) return;
@@ -59,17 +64,14 @@ public class SceneLoaderManager : MonoBehaviour//, ISceneLoader
     public IEnumerator LoadingAsync(AsyncOperation operation, bool unloadLastScene)
     {
         operation.allowSceneActivation = false;
-        loadingScreen.SetActive(true);
 
         while (!operation.isDone)
         {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
-            slider.value = progress;
 
             if (progress >= 0.9f)
             {
                 operation.allowSceneActivation = true;
-                loadingScreen.SetActive(false);
                 if (unloadLastScene)
                     SceneManager.LoadScene(sceneName);
             }
@@ -83,7 +85,7 @@ public class SceneLoaderManager : MonoBehaviour//, ISceneLoader
         Application.Quit();
     }
 
-    public void DisableDuplicatedComponents() //FindObjectsOfType
+    public void DisableDuplicatedComponents()
     {
         EventSystem[] eventSystems = Object.FindObjectsByType<EventSystem>(FindObjectsSortMode.None);
         if (eventSystems.Length > 1)

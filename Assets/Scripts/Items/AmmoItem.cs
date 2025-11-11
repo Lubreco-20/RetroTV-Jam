@@ -11,9 +11,6 @@ public class AmmoItem : PickUpItem
         if (weaponHandler != null)
         {
             weaponHandler.AddReserveAmmo(weaponName, ammoAmount);
-            // Llamar efecto o sonido
         }
-
-        gameObject.SetActive(false);
     }
 }

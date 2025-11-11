@@ -1,27 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class GameState : MonoBehaviour//, IGameState
+public class GameState : MonoBehaviour
 {
-    //public delegate void GameStateDelegate(IGameState state);
-    //public static event GameStateDelegate OnSetState;
-
     public delegate void GameStateSoundDelegate();
     public static event GameStateSoundDelegate OnStopSound;
 
-    [SerializeField] GameObject gameCanvas;
+    [SerializeField] GameObject pauseCanvas;
 
     bool isGamePause;
     bool isEndGame; // Win/GameOver
+
+    void Awake()
+    {
+        ResumeGame();
+    }
+
+    public void PauseResume(InputAction.CallbackContext ctx)
+    {
+        if (Time.timeScale == 1f)
+            PauseGame();
+        else
+            ResumeGame();
+    }
 
     public void PauseGame() 
     {
         if (!isGamePause && !isEndGame)
         {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
             Time.timeScale = 0f;
             DisableEnableGameCanvas(false);
+            pauseCanvas.SetActive(true);
             isGamePause = true;
         }
     }
@@ -30,16 +45,18 @@ public class GameState : MonoBehaviour//, IGameState
     {
         if (isGamePause && !isEndGame)
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
             Time.timeScale = 1f;
             DisableEnableGameCanvas(true);
+            pauseCanvas.SetActive(false);
             isGamePause = false;
         }
     }
 
     public bool CheckIfGameIsPause()
-    {
-        return isGamePause;
-    }
+        => isGamePause;
 
     public void EndGame()
     {
@@ -50,10 +67,12 @@ public class GameState : MonoBehaviour//, IGameState
         OnStopSound?.Invoke();
     }
 
-    public void DisableEnableGameCanvas(bool state) => gameCanvas.GetComponent<GraphicRaycaster>().enabled = state;
-
-    void OnEnable()
+    public void DisableEnableGameCanvas(bool state)
     {
-        //OnSetState?.Invoke(GetComponent<IGameState>());
+        GraphicRaycaster raycaster = pauseCanvas.GetComponent<GraphicRaycaster>();
+
+        if (raycaster == null) return;
+
+        raycaster.enabled = state;
     }
 }

@@ -15,10 +15,11 @@ MonoBehaviour:
   enemyId: 0
   enemyPrefab: {fileID: 5993422797232582852, guid: 11ca853a47da48549bd997a46d36528f, type: 3}
   maxHealth: 20
-  minSpeed: 4
-  maxSpeed: 5
+  minSpeed: 3.5
+  maxSpeed: 4
   dmg: 1
-  attackRange: 2.5
+  stopRange: 2.5
+  attackRange: 2
   attackCoolDown: 3
   spawnProbability: 0.7
   isBoss: 0

@@ -9,9 +9,13 @@ public class SoundEffect : MonoBehaviour
     public AudioClip[] clips;
     AudioMixer mixer;
 
+    private float ogPitch;
+
     void Start()
     {
         if(source == null) source = GetComponent<AudioSource>();
+
+        ogPitch = source.pitch;
 
         //GameState.OnStopSound += StopSoundEffect;
     }
@@ -55,14 +59,25 @@ public class SoundEffect : MonoBehaviour
         PlaySoundEffect(nameClip, true);
     }
 
+    public void GetRandomSoundEffect(int minInclude, int maxEsclude)
+    {
+        string nameClip = clips[Random.Range(minInclude, maxEsclude)].name;
+        PlaySoundEffect(nameClip, true);
+    }
+
     public void SetRandomPitch()
     {
         float rndPitch = Random.Range(0.75f, 1.5f);
-        source.pitch = rndPitch;
+        float newPitch = rndPitch * ogPitch;
+        newPitch = Mathf.Clamp(newPitch, -3f, 3f);
+        source.pitch = newPitch;
     }
 
     public void SetOGPitch()
-        => source.pitch = 1f;
+        => source.pitch = ogPitch;
+
+    public void SetPitch(int i)
+        => source.pitch = i;
 
     public void PlaySoundEffectFromAnimator(string nameClip) => PlaySoundEffect(nameClip);
 }

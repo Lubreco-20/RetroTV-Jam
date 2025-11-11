@@ -19,7 +19,8 @@ public class EnemyData : ScriptableObject
     public int dmg; //Daño del enemigo
 
     [Header("Attack")]
-    public float attackRange; //Rango desde el que comenzará a disparar o atacar
+    public float stopRange; // Rango desde el que comenzará a atacar
+    public float attackRange; //Rango del ataque (cuerpo a cuerpo)
     public float attackCoolDown; //Intervalos de ataque
 
     [Header("Spawn")]

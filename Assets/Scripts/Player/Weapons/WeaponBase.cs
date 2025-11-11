@@ -119,7 +119,7 @@ public class WeaponBase : MonoBehaviour
 
     private void HandleMeleeAttack()
     {
-        Vector3 boxCenter = fpsCam.transform.position + fpsCam.transform.forward * (data.range / 2f);
+        Vector3 boxCenter = fpsCam.transform.position + fpsCam.transform.forward * ((data.range / 2f) + 1);
         Vector3 halfExtents = new Vector3(data.spread, data.spread, data.range / 2f);
 
         Collider[] hits = Physics.OverlapBox(boxCenter, halfExtents, fpsCam.transform.rotation, enemyMask);
@@ -165,7 +165,7 @@ public class WeaponBase : MonoBehaviour
     private List<(Vector3 origin, Vector3 dir)> debugRays = new();
     [Header("Debug")]
     [SerializeField] private bool showGizmos;
-
+    
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
@@ -183,7 +183,7 @@ public class WeaponBase : MonoBehaviour
         }
         else
         {
-            Vector3 boxCenter = fpsCam.transform.position + fpsCam.transform.forward * (data.range / 2f);
+            Vector3 boxCenter = fpsCam.transform.position + fpsCam.transform.forward * ((data.range / 2f) + 1);
             Vector3 halfExtents = new Vector3(data.spread, data.spread, data.range / 2f);
             Gizmos.matrix = Matrix4x4.TRS(boxCenter, fpsCam.transform.rotation, Vector3.one);
             Gizmos.DrawWireCube(Vector3.zero, halfExtents * 2f);

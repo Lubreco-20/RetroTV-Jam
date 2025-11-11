@@ -124,7 +124,9 @@ public class WeaponHandler : MonoBehaviour
             if(weapon.data.weaponName == name)
             {
                 weapon.currentReserve += addAmmo;
-                UpdateAmmoUI(weapon.currentAmmo, weapon.currentMagazineSize, weapon.currentReserve);
+
+                if(currentWeapon == weapon)
+                    UpdateAmmoUI(weapon.currentAmmo, weapon.currentMagazineSize, weapon.currentReserve);
             }
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +10,10 @@ public class EnemyController : MonoBehaviour
     public EnemyData data;
     public EnemyHealth health;
     public Animator anim;
+    public SoundEffect soundEffect;
+
+    private float minTimeBtwSounds = 1.5f, maxTimeBtwSounds = 3f;
+    private float timeBtwSounds, lastTimeSound;
 
     public LayerMask playerMask;
 
@@ -16,6 +21,14 @@ public class EnemyController : MonoBehaviour
 
     private float lastTimeAttacked;
     private bool isAttacking;
+
+    public event Action OnRangeAttack;
+
+    private void Awake()
+    {
+        health.InitailizeHealthValues(anim, soundEffect, data.maxHealth);
+        timeBtwSounds = UnityEngine.Random.Range(minTimeBtwSounds, maxTimeBtwSounds);
+    }
 
     private void OnEnable()
     {
@@ -26,19 +39,29 @@ public class EnemyController : MonoBehaviour
 
     private void SetAgentValues()
     {
-        agent.speed = Random.Range(data.minSpeed, data.maxSpeed);
+        agent.speed = UnityEngine.Random.Range(data.minSpeed, data.maxSpeed);
         agent.stoppingDistance = data.attackRange;
     }
 
     private void Update()
     {
+        PlayRandomSound();
         FollowPlayer();
+    }
+
+    private void PlayRandomSound()
+    {
+        if (Time.time - lastTimeSound < timeBtwSounds) return;
+
+        lastTimeSound = Time.time;
+        timeBtwSounds = UnityEngine.Random.Range(minTimeBtwSounds, maxTimeBtwSounds);
+
+        soundEffect.SetRandomPitch();
+        soundEffect.GetRandomSoundEffect(0, 4); // Roars
     }
 
     private void FollowPlayer()
     {
-        if (agent.isStopped) return;
-
         if (player == null || !canMove)
         {
             agent.isStopped = true;
@@ -49,8 +72,11 @@ public class EnemyController : MonoBehaviour
 
         if(dist <= data.attackRange)
         {
-            agent.isStopped = true;
-            TryAttack();
+            if (!isAttacking && Time.time - lastTimeAttacked >= data.attackCoolDown)
+            {
+                lastTimeAttacked = Time.time;
+                anim.SetTrigger("Attack");
+            }
         }
         else
         {
@@ -59,15 +85,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void TryAttack()
-    {
-        if(Time.time - lastTimeAttacked >= data.attackCoolDown)
-        {
-            lastTimeAttacked = Time.time;
+    public void ResetAttacking() => isAttacking = false;
 
-            anim.SetTrigger("Attack");
-        }
-    }
+    public void IsAttacking() => isAttacking = true;
 
     public void DoMeleeAttack()
     {
@@ -82,10 +102,17 @@ public class EnemyController : MonoBehaviour
 
     public void DoRangedAttack()
     {
-        /*if (projectilePrefab == null || firePoint == null) return;
+        OnRangeAttack?.Invoke();
+    }
 
-        Vector3 targetPos = player.transform.position;
-        GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-        proj.GetComponent<Projectile>().SetTarget(targetPos);*/
+    private void OnDrawGizmos()
+    {
+        if (data == null) return;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, data.stopRange);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, data.attackRange);
     }
 }

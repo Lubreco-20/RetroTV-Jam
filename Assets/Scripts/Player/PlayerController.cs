@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     [Header("General")]
     public CharacterController characterController;
-    public Animator anim;
     PlayerInputs inputActions;
 
     [Header("Movement")]
@@ -30,6 +29,7 @@ public class PlayerController : MonoBehaviour
     [Header("Classes")]
     public PlayerHealth health;
     public WeaponHandler weapons;
+    public GameState state;
 
     void Awake()
     {
@@ -51,10 +51,14 @@ public class PlayerController : MonoBehaviour
 
         inputActions.PlayerMap.Scroll.performed += weaponHandler.HandleScrollWeapon;
         inputActions.PlayerMap.Scroll.canceled += weaponHandler.HandleScrollWeapon;
+
+        inputActions.PlayerMap.Pause.started += state.PauseResume;
     }
 
     private void Update()
     {
+        if (state.CheckIfGameIsPause()) return;
+
         float mouseX = mousePos.x * sensX;
         float mouseY = mousePos.y * sensY;
 
@@ -83,14 +87,20 @@ public class PlayerController : MonoBehaviour
         characterController.Move(finalMove * Time.deltaTime);
     }
 
+    public void DisableInput()
+        => inputActions.Disable();
+
+    public void EnableInput()
+        => inputActions.Enable();
+
     void OnEnable()
     {
-        inputActions.Enable();
+        EnableInput();
     }
 
     void OnDisable()
     {
-        inputActions.Disable();
+        DisableInput();
     }
 
     private void OnTriggerEnter(Collider col)
@@ -100,7 +110,10 @@ public class PlayerController : MonoBehaviour
             PickUpItem item = col.GetComponent<PickUpItem>();
 
             if (item != null)
+            {
+                item.anim.SetTrigger("PickUp");
                 item.PickUp(this);
+            }
         }
     }
 }

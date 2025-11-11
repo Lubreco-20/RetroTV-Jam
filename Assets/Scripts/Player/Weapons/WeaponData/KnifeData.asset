@@ -20,7 +20,7 @@ MonoBehaviour:
   reserveAmmo: -1
   bulletsPerShot: 0
   reloadTime: 0
-  spread: 0.85
-  range: 2
+  spread: 0.75
+  range: 1
   allowBtnHold: 0
   useBullets: 0

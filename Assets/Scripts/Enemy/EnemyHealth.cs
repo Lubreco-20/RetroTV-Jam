@@ -3,16 +3,19 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public int maxHealth;
+    private int maxHealth;
     private int actualHealth;
 
     public event Action<EnemyHealth> OnEnemyDeath;
 
     private Animator anim;
+    private SoundEffect sfx;
 
-    public void SetVal(Animator anim)
+    public void InitailizeHealthValues(Animator anim, SoundEffect sfx, int health)
     {
+        maxHealth = health;
         this.anim = anim;
+        this.sfx = sfx;
     }
 
     public void RestoreHealth()
@@ -23,16 +26,23 @@ public class EnemyHealth : MonoBehaviour
     public void GetDamage(int dmg)
     {
         actualHealth -= dmg;
-        
+
+        sfx.SetRandomPitch();
+        sfx.GetRandomSoundEffect(4, 7); // Hits/Deaths
+
         if (actualHealth <= 0)
         {
-            anim.SetTrigger("Death");
-            OnEnemyDeath?.Invoke(this);
-            gameObject.SetActive(false);
+            anim.Play("Zombie_Die");
         }
         else
         {
-            anim.SetTrigger("Hurt");
+            anim.Play("Zombie_Hurt");
         }
+    }
+
+    public void OnDeath()
+    {
+        OnEnemyDeath?.Invoke(this);
+        gameObject.SetActive(false);
     }
 }

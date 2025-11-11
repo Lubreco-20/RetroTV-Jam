@@ -1,28 +1,45 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth;
     private int actualHealth;
 
+    public Image screenBlood;
+
     private void Awake()
     {
         actualHealth = maxHealth;
+        SetAlphaBlood();
     }
 
     public void GetDamage(int dmg)
     {
         actualHealth -= dmg;
-        Debug.Log("Auch");
+        actualHealth = Mathf.Max(0, actualHealth);
+        SetAlphaBlood();
+
         if (actualHealth < 0)
         {
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
             Debug.Log("GameOver");
         }
+    }
+
+    private void SetAlphaBlood()
+    {
+        float perc = (float)actualHealth / maxHealth;
+        float newAlpha = Mathf.Lerp(1f, 0f, perc);
+
+        Color color = screenBlood.color;
+        color.a = newAlpha;
+        screenBlood.color = color;
     }
 
     public void GetHealth(int health)
     {
         actualHealth = Mathf.Min(maxHealth, health + actualHealth);
+        SetAlphaBlood();
     }
 }
