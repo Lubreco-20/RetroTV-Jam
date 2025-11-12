@@ -29,6 +29,8 @@ public class EnemyWaves : MonoBehaviour
     private Animator roundAnim;
     private TextMeshProUGUI roundText;
 
+    bool isWin;
+
     private void Start()
     {
         InitializeValues();
@@ -95,6 +97,13 @@ public class EnemyWaves : MonoBehaviour
                 spawnTimer = 0f;
                 EnemySpawner();
             }
+        }
+        else
+        {
+            if (isWin) return;
+
+            isWin = true;
+            //roundText.text = "You Win";
         }
     }
 

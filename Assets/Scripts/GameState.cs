@@ -6,16 +6,18 @@ using UnityEngine.UI;
 
 public class GameState : MonoBehaviour
 {
-    public delegate void GameStateSoundDelegate();
-    public static event GameStateSoundDelegate OnStopSound;
-
     [SerializeField] GameObject pauseCanvas;
 
     bool isGamePause;
     bool isEndGame; // Win/GameOver
 
+    static GameState instance;
+    public static GameState Instance { get { return instance; } }
+
     void Awake()
     {
+        if (instance == null) instance = this;
+
         pauseCanvas.SetActive(false);
     }
 
@@ -58,13 +60,11 @@ public class GameState : MonoBehaviour
     public bool CheckIfGameIsPause()
         => isGamePause;
 
-    public void EndGame()
+    public void GameOver()
     {
         Time.timeScale = 0f;
         DisableEnableGameCanvas(false);
         isEndGame = true;
-
-        OnStopSound?.Invoke();
     }
 
     public void DisableEnableGameCanvas(bool state)

@@ -9,9 +9,14 @@ public class Bullet : MonoBehaviour
     [SerializeField] private int damage;
 
     [SerializeField] private Rigidbody rb;
+    private SoundEffect sound;
     private BulletPool pool;
 
-    public void SetPool(BulletPool bulletPool) => pool = bulletPool;
+    public void SetPool(BulletPool bulletPool)
+    {
+        pool = bulletPool;
+        sound = GetComponent<SoundEffect>();
+    }
 
     public void ShootBullet()
     {
@@ -33,6 +38,7 @@ public class Bullet : MonoBehaviour
             CancelInvoke("ReturnBullet");
 
             col.gameObject.GetComponent<PlayerHealth>().GetDamage(damage);
+            sound.PlaySoundEffect("Splat");
 
             ReturnBullet();
         }
