@@ -25,11 +25,13 @@ public class VolumeSettings : MonoBehaviour
         musicSlider.minValue = 0.0001f;
         musicSlider.maxValue = 1;
         musicValue = PlayerPrefs.GetFloat(mixerMusic, 1f);
+        master.SetFloat(mixerMusic, musicValue);
 
         sfxSlider.onValueChanged.AddListener(SetSfxVolume);
         sfxSlider.minValue = 0.0001f;
         sfxSlider.maxValue = 1;
         sfxValue = PlayerPrefs.GetFloat(mixerSfx, 1f);
+        master.SetFloat(mixerSfx, sfxValue);
     }
 
     private void Start()

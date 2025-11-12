@@ -57,7 +57,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (state.CheckIfGameIsPause()) return;
+        if (state.CheckIfGameIsPause())
+        {
+            DisableInput();
+            return;
+        }
+
+        EnableInput();
 
         float mouseX = mousePos.x * sensX;
         float mouseY = mousePos.y * sensY;

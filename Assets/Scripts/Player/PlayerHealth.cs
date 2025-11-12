@@ -22,9 +22,11 @@ public class PlayerHealth : MonoBehaviour
 
         if (actualHealth < 0)
         {
-            //gameObject.SetActive(false);
             Debug.Log("GameOver");
+            return;
         }
+
+
     }
 
     private void SetAlphaBlood()

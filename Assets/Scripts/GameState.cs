@@ -16,7 +16,7 @@ public class GameState : MonoBehaviour
 
     void Awake()
     {
-        ResumeGame();
+        pauseCanvas.SetActive(false);
     }
 
     public void PauseResume(InputAction.CallbackContext ctx)
