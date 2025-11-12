@@ -5,23 +5,29 @@ using UnityEngine;
 
 public class CamShake : MonoBehaviour
 {
-    CinemachineCamera virtualCam;
-    CinemachineBasicMultiChannelPerlin multiChannel;
+    private CinemachineCamera vCam;
+    private CinemachineBasicMultiChannelPerlin noise;
+
+    static CamShake instance;
+    public static CamShake Instance { get { return instance; } }
 
     private void Awake()
     {
-        virtualCam = GetComponent<CinemachineCamera>();
-        //multiChannel = virtualCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        if (instance == null) instance = this;
+
+        vCam = GetComponent<CinemachineCamera>();
+        noise = vCam.GetComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     public void ShakeCamera(float intensity, float time)
     {
-        multiChannel.AmplitudeGain = intensity;
+        if (noise == null) return;
+        noise.AmplitudeGain = intensity;
         Invoke("StopShakeCamera", time);
     }
 
-    public void StopShakeCamera()
+    private void StopShakeCamera()
     {
-        multiChannel.AmplitudeGain = 0f;
+        noise.AmplitudeGain = 0f;
     }
 }

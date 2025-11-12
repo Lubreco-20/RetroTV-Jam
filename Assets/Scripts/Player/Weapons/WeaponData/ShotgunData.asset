@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ShotgunData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Shotgun
-  dmg: 3
+  dmg: 8
   fireRate: 1
   timeBtwShooting: 0
   magazineSize: 2

@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyId: 3
   enemyPrefab: {fileID: 6523136796073377991, guid: d4fd3c037ce932045a050948a30e75e5, type: 3}
-  maxHealth: 50
+  maxHealth: 600
   minSpeed: 4
   maxSpeed: 4.5
-  dmg: 5
+  dmg: 25
   stopRange: 3.5
   attackRange: 4
   attackCoolDown: 3

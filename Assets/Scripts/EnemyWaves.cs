@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class EnemyWaves : MonoBehaviour
@@ -24,6 +25,9 @@ public class EnemyWaves : MonoBehaviour
 
     [Header("Others")]
     public SpawnItem items;
+    public GameObject round;
+    private Animator roundAnim;
+    private TextMeshProUGUI roundText;
 
     private void Start()
     {
@@ -32,6 +36,9 @@ public class EnemyWaves : MonoBehaviour
 
     private void InitializeValues()
     {
+        roundAnim = round.GetComponent<Animator>();
+        roundText = round.GetComponent<TextMeshProUGUI>();
+
         InstantiateAllEnemies();
         StartWave();
     }
@@ -76,6 +83,8 @@ public class EnemyWaves : MonoBehaviour
             if (enemieKilled <= 0)
             {
                 currentWave++;
+                roundText.text = (currentWave >= 3 ? "Final Round" : "Round" + currentWave);
+                roundAnim.Play("StartRound");
                 StartWave();
             }
 

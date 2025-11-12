@@ -24,10 +24,13 @@ public class EnemyController : MonoBehaviour
 
     public event Action OnRangeAttack;
 
+    CamShake shake;
+
     private void Awake()
     {
         health.InitailizeHealthValues(anim, soundEffect, data.maxHealth);
         timeBtwSounds = UnityEngine.Random.Range(minTimeBtwSounds, maxTimeBtwSounds);
+        shake = CamShake.Instance;
     }
 
     private void OnEnable()
@@ -103,6 +106,11 @@ public class EnemyController : MonoBehaviour
     public void DoRangedAttack()
     {
         OnRangeAttack?.Invoke();
+    }
+
+    public void CallForShake(int intensity)
+    {
+        shake.ShakeCamera(intensity, 1f);
     }
 
     private void OnDrawGizmos()

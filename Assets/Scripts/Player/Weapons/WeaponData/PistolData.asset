@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PistolData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Pistol
-  dmg: 1
+  dmg: 25
   fireRate: 0.25
   timeBtwShooting: 0.25
   magazineSize: 12

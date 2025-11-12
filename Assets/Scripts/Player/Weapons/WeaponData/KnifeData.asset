@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: KnifeData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Knife
-  dmg: 2
+  dmg: 40
   fireRate: 0.8
   timeBtwShooting: 0.8
   magazineSize: -1

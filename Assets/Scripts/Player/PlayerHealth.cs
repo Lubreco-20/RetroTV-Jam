@@ -8,9 +8,12 @@ public class PlayerHealth : MonoBehaviour
 
     public Image screenBlood;
 
+    CamShake shake;
+
     private void Awake()
     {
         actualHealth = maxHealth;
+        shake = CamShake.Instance;
         SetAlphaBlood();
     }
 
@@ -26,7 +29,7 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-
+        shake.ShakeCamera(1f, 0.5f);
     }
 
     private void SetAlphaBlood()

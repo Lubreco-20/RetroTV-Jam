@@ -9,6 +9,7 @@ public class WeaponBase : MonoBehaviour
     public WeaponData data;
     public RaycastHit rayHit;
     public LayerMask enemyMask;
+    CamShake shake;
 
     private Camera fpsCam;
 
@@ -39,6 +40,8 @@ public class WeaponBase : MonoBehaviour
         currentAmmo = data.magazineSize;
         currentMagazineSize = data.magazineSize;
         currentReserve = data.reserveAmmo;
+
+        shake = CamShake.Instance;
 
         anim = GetComponent<Animator>();
     }
@@ -162,13 +165,18 @@ public class WeaponBase : MonoBehaviour
         isReloading = false;
     }
 
+    public void CallForShake(int intensity)
+    {
+        shake.ShakeCamera(intensity, 1f);
+    }
+
     private List<(Vector3 origin, Vector3 dir)> debugRays = new();
     [Header("Debug")]
     [SerializeField] private bool showGizmos;
     
     private void OnDrawGizmos()
     {
-        if (!showGizmos) return;
+        if (!showGizmos || data == null || fpsCam == null) return;
 
         Gizmos.color = Color.red;
 
