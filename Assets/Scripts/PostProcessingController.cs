@@ -8,6 +8,7 @@ public class PostProcessingController : MonoBehaviour
     [SerializeField] Volume postProcess;
 
     private FilmGrain filmGrain;
+    private static float toggleFilmGrain = 1f;
 
     private void Awake()
     {
@@ -15,8 +16,16 @@ public class PostProcessingController : MonoBehaviour
             postProcess = GetComponent<Volume>();
 
         postProcess.profile.TryGet(out filmGrain);
+
+        SetToggleFilmGrain();
     }
 
-    public void FilmGrain(bool value)
-        => filmGrain.active = value;
+    public void ToggleFilmGrain()
+    {
+        toggleFilmGrain = filmGrain.intensity == 1f ? 0f : 1f;
+        filmGrain.intensity.Override(toggleFilmGrain);
+    }
+
+    public void SetToggleFilmGrain()
+        => filmGrain.intensity.Override(toggleFilmGrain);
 }

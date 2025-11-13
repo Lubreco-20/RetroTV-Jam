@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -7,6 +8,9 @@ using UnityEngine.UI;
 public class GameState : MonoBehaviour
 {
     [SerializeField] GameObject pauseCanvas;
+    [SerializeField] GameObject endGameObj;
+    TextMeshProUGUI endGameText;
+    Animator endGameAnim;
 
     bool isGamePause;
     bool isEndGame; // Win/GameOver
@@ -19,6 +23,8 @@ public class GameState : MonoBehaviour
         if (instance == null) instance = this;
 
         pauseCanvas.SetActive(false);
+        endGameText = endGameObj.GetComponentInChildren<TextMeshProUGUI>();
+        endGameAnim = endGameObj.GetComponent<Animator>();
     }
 
     public void PauseResume(InputAction.CallbackContext ctx)
@@ -60,11 +66,20 @@ public class GameState : MonoBehaviour
     public bool CheckIfGameIsPause()
         => isGamePause;
 
-    public void GameOver()
+    public bool CheckIfIsEndGame()
+        => isEndGame;
+
+    public void EndOfTheGame(bool isGameOver)
     {
         Time.timeScale = 0f;
         DisableEnableGameCanvas(false);
         isEndGame = true;
+        GetComponent<AudioSource>().Stop();
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().DisableInput();
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        endGameText.text = isGameOver ? "You Lose!" : "You Win!";
+        endGameAnim.SetTrigger("EndGame");
     }
 
     public void DisableEnableGameCanvas(bool state)

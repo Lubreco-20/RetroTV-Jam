@@ -19,7 +19,7 @@ MonoBehaviour:
   maxSpeed: 3.5
   dmg: 1
   stopRange: 10
-  attackRange: 0
+  attackRange: 12
   attackCoolDown: 2.5
   spawnProbability: 0.3
   isBoss: 0

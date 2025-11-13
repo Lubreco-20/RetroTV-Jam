@@ -38,7 +38,7 @@ public class Bullet : MonoBehaviour
             CancelInvoke("ReturnBullet");
 
             col.gameObject.GetComponent<PlayerHealth>().GetDamage(damage);
-            sound.PlaySoundEffect("Splat");
+            //sound.PlaySoundEffect("Splat");
 
             ReturnBullet();
         }

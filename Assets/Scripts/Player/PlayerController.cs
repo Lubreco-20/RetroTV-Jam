@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 1f)]
     public float sensX = .3f,sensY = .3f;
 
-    public Transform cam;
+    public Transform camRot;
     float xRot;
 
     Vector2 mousePos;
@@ -29,14 +29,20 @@ public class PlayerController : MonoBehaviour
     [Header("Classes")]
     public PlayerHealth health;
     public WeaponHandler weapons;
-    public GameState state;
+    [SerializeField] Animator anim;
+    GameState state;
 
-    void Awake()
+    private void Awake()
+    {
+        inputActions = new PlayerInputs();
+    }
+
+    void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        inputActions = new PlayerInputs();
+        state = GameState.Instance;
 
         inputActions.PlayerMap.Move.performed += ctx => dir = ctx.ReadValue<Vector2>();
         inputActions.PlayerMap.Move.canceled += ctx => dir = Vector2.zero;
@@ -53,17 +59,23 @@ public class PlayerController : MonoBehaviour
         inputActions.PlayerMap.Scroll.canceled += weaponHandler.HandleScrollWeapon;
 
         inputActions.PlayerMap.Pause.started += state.PauseResume;
+
+        health.InitializeHealth(state, anim);
     }
+
+    bool isDeactivated;
 
     private void Update()
     {
         if (state.CheckIfGameIsPause())
         {
-            DisableInput();
+            if(!isDeactivated)
+                DeactivateSomeFunctions();
             return;
         }
 
-        EnableInput();
+        if(isDeactivated)
+            ReactivateSomeFunctions();
 
         float mouseX = mousePos.x * sensX;
         float mouseY = mousePos.y * sensY;
@@ -75,14 +87,43 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(Vector3.up * mouseX);
 
         // Rotacion de la camara
-        cam.localRotation = Quaternion.Euler(xRot, 0f, 0f);
+        camRot.localRotation = Quaternion.Euler(xRot, 0f, 0f);
 
         moveCharacter();
+    }
+
+    void DeactivateSomeFunctions()
+    {
+        isDeactivated = true;
+
+        inputActions.PlayerMap.Attack.started -= weaponHandler.OnAttackStart;
+        inputActions.PlayerMap.Scroll.performed -= weaponHandler.HandleScrollWeapon;
+        inputActions.PlayerMap.Reload.started -= weaponHandler.OnReload;
+        inputActions.PlayerMap.Look.performed -= ctx => mousePos = ctx.ReadValue<Vector2>();
+        inputActions.PlayerMap.Move.performed -= ctx => dir = ctx.ReadValue<Vector2>();
+        inputActions.PlayerMap.Pause.started -= state.PauseResume;
+    }
+
+    void ReactivateSomeFunctions()
+    {
+        isDeactivated = false;
+
+        inputActions.PlayerMap.Attack.started += weaponHandler.OnAttackStart;
+        inputActions.PlayerMap.Scroll.performed += weaponHandler.HandleScrollWeapon;
+        inputActions.PlayerMap.Reload.started += weaponHandler.OnReload;
+        inputActions.PlayerMap.Look.performed += ctx => mousePos = ctx.ReadValue<Vector2>();
+        inputActions.PlayerMap.Move.performed += ctx => dir = ctx.ReadValue<Vector2>();
+        inputActions.PlayerMap.Pause.started += state.PauseResume;
     }
 
     void moveCharacter()
     {
         Vector3 moveDir = transform.right * dir.x + transform.forward * dir.y;
+
+        if (moveDir == Vector3.zero)
+            anim.SetBool("IsWalking", false);
+        else
+            anim.SetBool("IsWalking", true);
 
         if (characterController.isGrounded && vel.y < 0)
             vel.y = -2;

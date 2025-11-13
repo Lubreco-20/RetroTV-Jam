@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PistolData
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: Pistol
-  dmg: 25
+  dmg: 20
   fireRate: 0.25
   timeBtwShooting: 0.25
   magazineSize: 12
@@ -21,6 +21,6 @@ MonoBehaviour:
   bulletsPerShot: 1
   reloadTime: 1.8
   spread: 0.007
-  range: 1000
+  range: 60
   allowBtnHold: 0
   useBullets: 1

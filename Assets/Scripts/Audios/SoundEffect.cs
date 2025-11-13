@@ -16,8 +16,6 @@ public class SoundEffect : MonoBehaviour
         if(source == null) source = GetComponent<AudioSource>();
 
         ogPitch = source.pitch;
-
-        //GameState.OnStopSound += StopSoundEffect;
     }
 
     public void PlaySoundEffect(string nameClip, bool isOneShot = true)
@@ -35,6 +33,21 @@ public class SoundEffect : MonoBehaviour
                     source.clip = clip;
                     source.Play();
                 }
+                return;
+            }
+        }
+
+        Debug.Log("No hay ningún sonido llamado: " + nameClip);
+    }
+
+    public void PlayMusic(string nameClip)
+    {
+        foreach (AudioClip clip in clips)
+        {
+            if (clip.name == nameClip)
+            {
+                source.clip = clip;
+                source.Play();
                 return;
             }
         }

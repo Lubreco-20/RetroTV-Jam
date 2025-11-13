@@ -28,8 +28,7 @@ public class EnemyWaves : MonoBehaviour
     public GameObject round;
     private Animator roundAnim;
     private TextMeshProUGUI roundText;
-
-    bool isWin;
+    private GameState state;
 
     private void Start()
     {
@@ -40,6 +39,8 @@ public class EnemyWaves : MonoBehaviour
     {
         roundAnim = round.GetComponent<Animator>();
         roundText = round.GetComponent<TextMeshProUGUI>();
+
+        state = GameState.Instance;
 
         InstantiateAllEnemies();
         StartWave();
@@ -80,35 +81,42 @@ public class EnemyWaves : MonoBehaviour
 
     private void Update()
     {
-        if (currentWave < waveList.waves.Count - 1)
+        if (currentWave < waveList.waves.Count)
         {
-            if (enemieKilled <= 0)
+            if (enemieKilled <= 0 && enemySpawned >= enemyToSpawn)
             {
                 currentWave++;
-                roundText.text = (currentWave >= 3 ? "Final Round" : "Round" + currentWave);
-                roundAnim.Play("StartRound");
-                StartWave();
+
+                if (currentWave < waveList.waves.Count)
+                {
+                    StartWave();
+                }
+                else
+                {
+                    // Sonido de ganar
+                    state.EndOfTheGame(false); // False = You Win
+                    return;
+                }
             }
 
-            spawnTimer += Time.deltaTime;
-
-            if (spawnTimer > waveList.waves[currentWave].enemySpawnInterval)
+            // Spawn de enemigos
+            if (enemySpawned < maxEnemiesAllowed && enemySpawned < enemyToSpawn)
             {
-                spawnTimer = 0f;
-                EnemySpawner();
+                spawnTimer += Time.deltaTime;
+                if (spawnTimer > waveList.waves[currentWave].enemySpawnInterval)
+                {
+                    spawnTimer = 0f;
+                    EnemySpawner();
+                }
             }
-        }
-        else
-        {
-            if (isWin) return;
-
-            isWin = true;
-            //roundText.text = "You Win";
         }
     }
 
     private void StartWave()
     {
+        roundText.text = (currentWave == waveList.waves.Count - 1 ? "Final Round" : "Round " + (currentWave + 1));
+        roundAnim.Play("StartRound");
+
         enemyToSpawn = waveList.waves[currentWave].waveQuota;
         enemieKilled = enemyToSpawn;
         enemySpawned = 0;
@@ -142,6 +150,7 @@ public class EnemyWaves : MonoBehaviour
 
         foreach (var enemy in wave.enemyList)
         {
+            if (enemy.isBoss) continue;
             cmltv += enemy.spawnProbability;
             if (rnd <= cmltv)
             {

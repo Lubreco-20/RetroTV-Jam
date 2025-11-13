@@ -69,6 +69,7 @@ public class WeaponBase : MonoBehaviour
     public void StopAttacking()
     {
         isAttacking = false;
+        isReadyToAttack = true;
     }
 
     private void Attack()
@@ -151,6 +152,11 @@ public class WeaponBase : MonoBehaviour
         anim.SetTrigger("Reload");
     }
 
+    public void StopReloading()
+    {
+        isReloading = false;
+    }
+
     // Called from animator
     public void Reload()
     {
@@ -167,7 +173,7 @@ public class WeaponBase : MonoBehaviour
 
     public void CallForShake(int intensity)
     {
-        shake.ShakeCamera(intensity, 1f);
+        shake.ShakeCamera(intensity, 0.5f);
     }
 
     private List<(Vector3 origin, Vector3 dir)> debugRays = new();

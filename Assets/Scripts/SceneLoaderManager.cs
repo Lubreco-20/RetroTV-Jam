@@ -27,18 +27,18 @@ public class SceneLoaderManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         anim = GetComponent<Animator>();
-        controller.DisableInput();
+        controller?.DisableInput();
         anim.updateMode = AnimatorUpdateMode.Normal;
         anim.Play("FadeOut");
     }
 
     public void EnableInput()
-        => controller.EnableInput();
+        => controller?.EnableInput();
 
     public void GoToScene(string name)
     {
         sceneName = name;
-        controller.DisableInput();
+        controller?.DisableInput();
         anim.updateMode = AnimatorUpdateMode.UnscaledTime;
         anim.Play("FadeIn");
     }

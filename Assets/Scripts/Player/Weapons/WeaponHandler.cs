@@ -133,7 +133,14 @@ public class WeaponHandler : MonoBehaviour
 
     bool canAttack = true;
     public void SetCanAttack(bool value)
-        => canAttack = value;
+    {
+        canAttack = value;
+        if (!value)
+        {
+            currentWeapon?.StopAttacking();
+            OnStopReloading();
+        }
+    }
 
     public void OnAttackStart(InputAction.CallbackContext context)
     {
@@ -148,4 +155,7 @@ public class WeaponHandler : MonoBehaviour
         if (!canAttack) return;
         currentWeapon?.StartReloading();
     }
+
+    public void OnStopReloading()
+        => currentWeapon?.StopReloading();
 }

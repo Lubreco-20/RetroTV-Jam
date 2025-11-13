@@ -43,7 +43,7 @@ public class EnemyController : MonoBehaviour
     private void SetAgentValues()
     {
         agent.speed = UnityEngine.Random.Range(data.minSpeed, data.maxSpeed);
-        agent.stoppingDistance = data.attackRange;
+        agent.stoppingDistance = data.stopRange;
     }
 
     private void Update()

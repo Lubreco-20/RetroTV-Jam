@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +10,17 @@ public class PlayerHealth : MonoBehaviour
     public Image screenBlood;
 
     CamShake shake;
+    GameState state;
+    Animator anim;
 
-    private void Awake()
+    [SerializeField] SoundEffect sound;
+
+    public void InitializeHealth(GameState state, Animator anim)
     {
         actualHealth = maxHealth;
         shake = CamShake.Instance;
+        this.state = state;
+        this.anim = anim;
         SetAlphaBlood();
     }
 
@@ -23,12 +30,17 @@ public class PlayerHealth : MonoBehaviour
         actualHealth = Mathf.Max(0, actualHealth);
         SetAlphaBlood();
 
-        if (actualHealth < 0)
+        if (actualHealth <= 0)
         {
-            Debug.Log("GameOver");
+            sound.SetOGPitch();
+            anim.Play("Player_Death");
+            anim.updateMode = AnimatorUpdateMode.UnscaledTime;
+            state.EndOfTheGame(true); // True = Game Over
             return;
         }
 
+        sound.SetRandomPitch();
+        sound.PlaySoundEffect("Player_Hurt");
         shake.ShakeCamera(1f, 0.5f);
     }
 

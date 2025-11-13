@@ -18,9 +18,9 @@ MonoBehaviour:
   timeBtwShooting: 0
   magazineSize: 2
   reserveAmmo: 32
-  bulletsPerShot: 8
+  bulletsPerShot: 16
   reloadTime: 1.5
   spread: 0.1
-  range: 20
+  range: 40
   allowBtnHold: 0
   useBullets: 1
