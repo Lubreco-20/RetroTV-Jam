@@ -69,7 +69,7 @@ public class WeaponBase : MonoBehaviour
     public void StopAttacking()
     {
         isAttacking = false;
-        isReadyToAttack = true;
+        //isReadyToAttack = true;
     }
 
     private void Attack()

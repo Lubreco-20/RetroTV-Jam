@@ -138,6 +138,7 @@ public class WeaponHandler : MonoBehaviour
         if (!value)
         {
             currentWeapon?.StopAttacking();
+            currentWeapon?.ResetAttack();
             OnStopReloading();
         }
     }

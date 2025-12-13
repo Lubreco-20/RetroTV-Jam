@@ -29,6 +29,7 @@ public class EnemyWaves : MonoBehaviour
     private Animator roundAnim;
     private TextMeshProUGUI roundText;
     private GameState state;
+    public SoundEffect sound;
 
     private void Start()
     {
@@ -93,7 +94,7 @@ public class EnemyWaves : MonoBehaviour
                 }
                 else
                 {
-                    // Sonido de ganar
+                    sound.PlaySoundEffect("win");
                     state.EndOfTheGame(false); // False = You Win
                     return;
                 }

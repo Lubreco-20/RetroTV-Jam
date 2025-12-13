@@ -26,5 +26,5 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 4d0f6a76389a03448a029d066b7c2fbf, type: 2}
     - {fileID: 11400000, guid: 8ba68f0f3049db3498271631be95e7e0, type: 2}
     - {fileID: 11400000, guid: 99553a93aacc76b43bc838012278e9e3, type: 2}
-    waveQuota: 75
+    waveQuota: 85
     enemySpawnInterval: 0.5

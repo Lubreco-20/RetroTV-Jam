@@ -16,7 +16,7 @@ MonoBehaviour:
   dmg: 20
   fireRate: 0.25
   timeBtwShooting: 0.25
-  magazineSize: 12
+  magazineSize: 6
   reserveAmmo: 48
   bulletsPerShot: 1
   reloadTime: 1.8
